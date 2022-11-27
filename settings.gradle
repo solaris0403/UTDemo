@@ -14,4 +14,3 @@ dependencyResolutionManagement {
 }
 rootProject.name = "UTDemo"
 include ':app'
-include ':utlib'
