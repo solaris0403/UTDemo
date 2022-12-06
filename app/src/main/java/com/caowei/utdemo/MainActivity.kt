@@ -1,44 +1,46 @@
 package com.caowei.utdemo
 
 import android.annotation.SuppressLint
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.SystemClock
 import android.util.Log
 import android.widget.Button
-import androidx.lifecycle.MutableLiveData
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 
 class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
-    private val mLiveData: MutableLiveData<String> = MutableLiveData()
+    private lateinit var mUserListViewModel: UserListViewModel
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-//        lifecycle.addObserver(MyObserver())
-
+        mUserListViewModel = ViewModelProvider(this).get(UserListViewModel::class.java)
+        mUserListViewModel.getLoadingLiveData().observe(this, object : Observer<Boolean> {
+            override fun onChanged(t: Boolean?) {
+                Log.i(TAG, "onChanged: $t")
+            }
+        })
         val btnStart: Button = findViewById(R.id.btn_start)
         btnStart.setOnClickListener {
-//            startActivity(Intent(this, SecondActivity::class.java))
-            mLiveData.value = System.currentTimeMillis().toString()
+            mUserListViewModel.setLoadingLiveData(true)
         }
-
-        mLiveData.observe(this) {
-            Log.e(TAG, it)
-        }
-        mLiveData.value = "onCreate"
     }
 
-    override fun onStart() {
-        super.onStart()
-//        mLiveData.value = "onStart"
+    private fun initView() {
+
     }
 
-    override fun onStop() {
-        super.onStop()
-        mLiveData.value = "onStop"
+    private fun initViewModel() {
+
+    }
+
+    private fun observeLivaData() {
+
+    }
+
+    private fun getData() {
+
     }
 }
