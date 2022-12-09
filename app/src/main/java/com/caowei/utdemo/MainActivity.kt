@@ -7,6 +7,7 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.caowei.utdemo.EventImageView.OnEventListener
 
 class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
@@ -26,6 +27,16 @@ class MainActivity : AppCompatActivity() {
         btnStart.setOnClickListener {
             mUserListViewModel.setLoadingLiveData(true)
         }
+        val image: EventImageView = findViewById<EventImageView>(R.id.img_avatar)
+        image.setOnEventListener(object : OnEventListener{
+            override fun onDoubleClick() {
+                Log.i(TAG, "onDoubleClick")
+            }
+
+            override fun onLongPress(action: Int) {
+                Log.i(TAG, "onLongPress: $action")
+            }
+        })
     }
 
     private fun initView() {
