@@ -1,18 +1,3 @@
-/**
- * Copyright (c) 2012-2013, Michael Yang 杨福海 (www.yangfuhai.com).
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.caowei.utils;
 
 import java.io.BufferedReader;
@@ -46,17 +31,13 @@ import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
-/**
- * @author Michael Yang（www.yangfuhai.com） update at 2013.08.07
- */
 public class ACache {
 	private static final String TAG = ACache.class.getSimpleName();
-	private static final String DIR_NAME = "utcache";
+	private static final String DIR_NAME = "ACache";
 	public static final int TIME_HOUR = 60 * 60;
 	public static final int TIME_DAY = TIME_HOUR * 24;
-	private static final int MAX_SIZE = 1000 * 1000 * 50; // 50 mb
+	private static final int MAX_SIZE = 1024 * 1024 * 50; // 50 mb
 	private static final int MAX_COUNT = Integer.MAX_VALUE; // 不限制存放数据的数量
 	private static final Map<String, ACache> mInstanceMap = new HashMap<>();
 	private final ACacheManager mCache;
@@ -82,6 +63,7 @@ public class ACache {
 	public static ACache get(File cacheDir, long max_size, int max_count) {
 		//通过PID来区分不同进程
 		ACache manager = mInstanceMap.get(cacheDir.getAbsoluteFile() + myPid());
+		// TODO: 2022/12/11 单例创建的问题
 		if (manager == null) {
 			manager = new ACache(cacheDir, max_size, max_count);
 			mInstanceMap.put(cacheDir.getAbsolutePath() + myPid(), manager);
@@ -89,6 +71,7 @@ public class ACache {
 		return manager;
 	}
 
+	// TODO: 2022/12/11 可以简化
 	private static String myPid() {
 		return "_" + android.os.Process.myPid();
 	}
@@ -641,6 +624,7 @@ public class ACache {
 		/**
 		 * 创建文件
 		 */
+		// TODO: 2022/12/11 hash值可能会冲突
 		private File newFile(String key) {
 			return new File(cacheDir, String.valueOf(key.hashCode()));
 		}
