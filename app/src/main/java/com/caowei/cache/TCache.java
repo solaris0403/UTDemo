@@ -1,4 +1,4 @@
-package com.think.cache;
+package com.caowei.cache;
 
 import android.content.Context;
 import android.graphics.Bitmap;

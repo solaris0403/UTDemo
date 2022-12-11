@@ -1,6 +1,6 @@
-package com.think.cache;
+package com.caowei.cache;
 
-import static com.think.cache.Optional.checkNotNull;
+import static com.caowei.cache.Optional.checkNotNull;
 
 import android.annotation.SuppressLint;
 import android.util.Log;

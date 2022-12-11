@@ -1,4 +1,4 @@
-package com.think.cache;
+package com.caowei.cache;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

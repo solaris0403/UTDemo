@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.afinal.simplecache;
+package com.caowei.utils;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -46,20 +46,23 @@ import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 /**
  * @author Michael Yang（www.yangfuhai.com） update at 2013.08.07
  */
 public class ACache {
+	private static final String TAG = ACache.class.getSimpleName();
+	private static final String DIR_NAME = "utcache";
 	public static final int TIME_HOUR = 60 * 60;
 	public static final int TIME_DAY = TIME_HOUR * 24;
 	private static final int MAX_SIZE = 1000 * 1000 * 50; // 50 mb
 	private static final int MAX_COUNT = Integer.MAX_VALUE; // 不限制存放数据的数量
-	private static Map<String, ACache> mInstanceMap = new HashMap<String, ACache>();
-	private ACacheManager mCache;
+	private static final Map<String, ACache> mInstanceMap = new HashMap<>();
+	private final ACacheManager mCache;
 
 	public static ACache get(Context ctx) {
-		return get(ctx, "ACache");
+		return get(ctx, DIR_NAME);
 	}
 
 	public static ACache get(Context ctx, String cacheName) {
@@ -71,15 +74,16 @@ public class ACache {
 		return get(cacheDir, MAX_SIZE, MAX_COUNT);
 	}
 
-	public static ACache get(Context ctx, long max_zise, int max_count) {
-		File f = new File(ctx.getCacheDir(), "ACache");
-		return get(f, max_zise, max_count);
+	public static ACache get(Context ctx, long max_size, int max_count) {
+		File f = new File(ctx.getCacheDir(), DIR_NAME);
+		return get(f, max_size, max_count);
 	}
 
-	public static ACache get(File cacheDir, long max_zise, int max_count) {
+	public static ACache get(File cacheDir, long max_size, int max_count) {
+		//通过PID来区分不同进程
 		ACache manager = mInstanceMap.get(cacheDir.getAbsoluteFile() + myPid());
 		if (manager == null) {
-			manager = new ACache(cacheDir, max_zise, max_count);
+			manager = new ACache(cacheDir, max_size, max_count);
 			mInstanceMap.put(cacheDir.getAbsolutePath() + myPid(), manager);
 		}
 		return manager;
@@ -91,8 +95,7 @@ public class ACache {
 
 	private ACache(File cacheDir, long max_size, int max_count) {
 		if (!cacheDir.exists() && !cacheDir.mkdirs()) {
-			throw new RuntimeException("can't make dirs in "
-					+ cacheDir.getAbsolutePath());
+			throw new RuntimeException("can't make dirs in " + cacheDir.getAbsolutePath());
 		}
 		mCache = new ACacheManager(cacheDir, max_size, max_count);
 	}
@@ -561,18 +564,15 @@ public class ACache {
 	}
 
 	/**
-	 * @title 缓存管理器
-	 * @author 杨福海（michael） www.yangfuhai.com
-	 * @version 1.0
+	 * 缓存管理器
 	 */
-	public class ACacheManager {
-		private final AtomicLong cacheSize;
-		private final AtomicInteger cacheCount;
+	private static class ACacheManager {
+		private final File cacheDir;
 		private final long sizeLimit;
 		private final int countLimit;
-		private final Map<File, Long> lastUsageDates = Collections
-				.synchronizedMap(new HashMap<File, Long>());
-		protected File cacheDir;
+		private final AtomicLong cacheSize;
+		private final AtomicInteger cacheCount;
+		private final Map<File, Long> lastUsageDates = Collections.synchronizedMap(new HashMap<>());
 
 		private ACacheManager(File cacheDir, long sizeLimit, int countLimit) {
 			this.cacheDir = cacheDir;
@@ -597,8 +597,7 @@ public class ACache {
 						for (File cachedFile : cachedFiles) {
 							size += calculateSize(cachedFile);
 							count += 1;
-							lastUsageDates.put(cachedFile,
-									cachedFile.lastModified());
+							lastUsageDates.put(cachedFile, cachedFile.lastModified());
 						}
 						cacheSize.set(size);
 						cacheCount.set(count);
@@ -625,32 +624,42 @@ public class ACache {
 			}
 			cacheSize.addAndGet(valueSize);
 
-			Long currentTime = System.currentTimeMillis();
+			long currentTime = System.currentTimeMillis();
 			file.setLastModified(currentTime);
 			lastUsageDates.put(file, currentTime);
 		}
 
 		private File get(String key) {
 			File file = newFile(key);
-			Long currentTime = System.currentTimeMillis();
+			long currentTime = System.currentTimeMillis();
 			file.setLastModified(currentTime);
 			lastUsageDates.put(file, currentTime);
 
 			return file;
 		}
 
+		/**
+		 * 创建文件
+		 */
 		private File newFile(String key) {
-			return new File(cacheDir, key.hashCode() + "");
+			return new File(cacheDir, String.valueOf(key.hashCode()));
 		}
 
+		/**
+		 * 删除文件
+		 */
 		private boolean remove(String key) {
 			File image = get(key);
 			return image.delete();
 		}
 
+		/**
+		 * 删除目录下所有文件
+		 */
 		private void clear() {
 			lastUsageDates.clear();
 			cacheSize.set(0);
+			cacheCount.set(0);
 			File[] files = cacheDir.listFiles();
 			if (files != null) {
 				for (File f : files) {
@@ -661,8 +670,6 @@ public class ACache {
 
 		/**
 		 * 移除旧的文件
-		 * 
-		 * @return
 		 */
 		private long removeNext() {
 			if (lastUsageDates.isEmpty()) {

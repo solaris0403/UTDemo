@@ -1,4 +1,4 @@
-package com.think.cache;
+package com.caowei.cache;
 
 /**
  * Created by borney on 3/8/17.

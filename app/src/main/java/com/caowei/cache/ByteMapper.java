@@ -1,4 +1,4 @@
-package com.think.cache;
+package com.caowei.cache;
 
 /**
  * ByteMapper is a object convert to byte array or byte array to object mapper, It is used to
