@@ -7,13 +7,13 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.caowei.utdemo.EventImageView.OnEventListener
+import com.caowei.utils.UTCache
 
 class MainActivity : AppCompatActivity() {
     companion object{
         private const val TAG = "MainActivity"
     }
-    private lateinit var mCache: ACache
+    private lateinit var mCache: UTCache
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        mCache = ACache.get(this)
+        mCache = UTCache.get(this)
         mCache.put("caowei", "ddd")
         val value = mCache.getAsString("caowei")
         Log.e(TAG, value)
