@@ -1,20 +1,19 @@
 package com.caowei.utdemo
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
-import android.widget.Button
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import com.caowei.utils.UTCache
+import com.blankj.utilcode.util.LogUtils
+import com.caowei.video.AlphaVideoView
+import com.caowei.video.AlphaVideoView.OnVideoStateListener
 
 class MainActivity : AppCompatActivity() {
-    companion object{
+    companion object {
         private const val TAG = "MainActivity"
     }
-    private lateinit var mCache: UTCache
-    @SuppressLint("MissingInflatedId")
+
+    private lateinit var alphaVideoView: AlphaVideoView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -22,21 +21,30 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        mCache = UTCache.get(this)
-        mCache.put("caowei", "ddd")
-        val value = mCache.getAsString("caowei")
-        Log.e(TAG, value)
+        alphaVideoView = findViewById(R.id.alphaVideoView)
+        findViewById<View>(R.id.btnStart).setOnClickListener {
+            btnStart()
+        }
+        findViewById<View>(R.id.btnStop).setOnClickListener {
+            btnStop()
+        }
+        alphaVideoView.setScaleType(AlphaVideoView.CENTER_INSIDE)
+        alphaVideoView.setOnVideoStateListener(object : OnVideoStateListener{
+            override fun onVideoStarted() {
+                LogUtils.d(TAG, "onVideoStarted")
+            }
+
+            override fun onVideoEnded() {
+                LogUtils.d(TAG, "onVideoEnded")
+            }
+        })
     }
 
-    private fun initViewModel() {
-
+    private fun btnStart() {
+        alphaVideoView.setVideoFromAssets("leftColorRightAlpha_3.mp4")
     }
 
-    private fun observeLivaData() {
-
-    }
-
-    private fun getData() {
-
+    private fun btnStop() {
+        alphaVideoView.stop()
     }
 }

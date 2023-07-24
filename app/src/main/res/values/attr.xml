@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="PraiseView">
+        <attr name="button_width" format="dimension" />
+        <attr name="button_height" format="dimension" />
+        <attr name="button_icon_res" format="reference" />
+        <attr name="isShowButton" format="boolean" />
+        <attr name="expression_list" format="reference" />
+        <attr name="expression_max_num" format="integer" />
+        <attr name="expression_size" format="dimension" />
+        <attr name="anim_duration" format="integer" />
+        <attr name="multiplying_power" format="integer" />
+    </declare-styleable>
+</resources>
