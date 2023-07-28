@@ -3,6 +3,7 @@ package com.caowei.video;
 import android.graphics.SurfaceTexture;
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
+import android.util.Log;
 import android.view.Surface;
 
 import java.nio.ByteBuffer;
@@ -271,18 +272,6 @@ public class VideoRenderer implements GLTextureView.Renderer, SurfaceTexture.OnF
         }
     }
 
-    void setAlphaColor(int color) {
-        logI("unsupport set alpha color");
-    }
-
-    void setCustomShader(String customShader) {
-        logI("unsupport set customShader");
-    }
-
-    void setAccuracy(double accuracy) {
-        logI("unsupport setAccuracy");
-    }
-
     void setOnSurfacePrepareListener(OnSurfacePrepareListener onSurfacePrepareListener) {
         this.onSurfacePrepareListener = onSurfacePrepareListener;
     }
@@ -379,14 +368,14 @@ public class VideoRenderer implements GLTextureView.Renderer, SurfaceTexture.OnF
     }
 
     private void logI(String log) {
-
+        Log.i(TAG, log);
     }
 
     private void logE(String log) {
-
+        Log.e(TAG, log);
     }
 
     private void postError(String error) {
-//        GLTextureView.postError(error);
+        Log.e(TAG, error);
     }
 }
