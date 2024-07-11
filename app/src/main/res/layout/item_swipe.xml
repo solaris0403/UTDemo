@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipChildren="false">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvItem"
+        android:layout_width="match_parent"
+        android:layout_height="124dp"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textSize="20dp" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="top|right"
+        android:layout_marginTop="-12dp"
+        android:layout_marginRight="-12dp"
+        android:background="#ff0000" />
+</FrameLayout>

@@ -2,4 +2,5 @@
 <resources>
     <item name="image_anim" type="id"/>
     <item name="image_anim_update" type="id"/>
+    <item type="id" name="sl_item_pos"/>
 </resources>

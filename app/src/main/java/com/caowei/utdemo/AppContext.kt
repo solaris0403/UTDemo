@@ -40,6 +40,9 @@ class AppContext : Application() {
 //        }
 //        QbSdk.initTbsSettings(map)
         MMKV.initialize(this)
+
+//        Mars.sdt.init(this)
+
     }
 
     inner class ApplicationLifecycleObserver : LifecycleEventObserver {
